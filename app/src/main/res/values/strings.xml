@@ -13,6 +13,11 @@
     <!-- Error messages-->
     <string name="detail_error_message">Sandwich data not available</string>
 
+    <!-- JSON keys -->
+    <string name="json_name_key">name</string>
+    <string name="json_main_name">mainName</string>
+    <!-- JSON keys -->
+
     <string-array name="sandwich_names">
         <item>Ham and cheese sandwich</item>
         <item>Bosna</item>
