@@ -11,43 +11,56 @@ import java.util.List;
 
 public class JsonUtils {
 
+    // JSON Keys
+    private static String JSON_KEY_NAME = "name";
+    private static String JSON_KEY_SANDWICH_MAIN_NAME = "mainName";
+    private static String JSON_KEY_SANDWICH_ALSO_KNOWN_AS = "alsoKnownAs";
+    private static String JSON_KEY_SANDWICH_PLACE_OF_ORIGIN = "placeOfOrigin";
+    private static String JSON_KEY_SANDWICH_DESCRIPTION = "description";
+    private static String JSON_KEY_SANDWICH_IMAGE = "image";
+    private static String JSON_KEY_SANDWICH_INGREDIENTS = "ingredients";
+
     public static Sandwich parseSandwichJson(String json) {
 
-        try {
-            JSONObject sandwich = new JSONObject(json);
 
-            // Context context = Contex
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+
+            Sandwich sandwich = new Sandwich();
 
             // Name
-            JSONObject name = sandwich.getJSONObject("name");
+            if (jsonObject.has(JSON_KEY_NAME)) {
+                JSONObject name = jsonObject.getJSONObject("name");
 
-            // Main name
-            String mainName = name.getString("mainName");
+                sandwich.setMainName(name.optString(JSON_KEY_SANDWICH_MAIN_NAME));
 
-            // Also known as
-            List<String> alsoKnownAs = parseJsonArray(name.getJSONArray("alsoKnownAs"));
+                // Also known as
+                List<String> alsoKnownAs = parseJsonArray(name.getJSONArray(JSON_KEY_SANDWICH_ALSO_KNOWN_AS));
+                sandwich.setAlsoKnownAs(alsoKnownAs);
+            }
 
             // Place of Origin
-            String placeOfOrigin = sandwich.getString("placeOfOrigin");
+            if (jsonObject.has(JSON_KEY_SANDWICH_PLACE_OF_ORIGIN)) {
+                sandwich.setPlaceOfOrigin(jsonObject.optString("placeOfOrigin"));
+            }
 
             // Description
-            String description = sandwich.getString("description");
+            if (jsonObject.has(JSON_KEY_SANDWICH_DESCRIPTION)) {
+                sandwich.setDescription(jsonObject.optString(JSON_KEY_SANDWICH_DESCRIPTION));
+            }
 
             // Image
-            String image = sandwich.getString("image");
+            if (jsonObject.has(JSON_KEY_SANDWICH_IMAGE)) {
+                sandwich.setImage(jsonObject.optString(JSON_KEY_SANDWICH_IMAGE));
+            }
 
             // Ingredients
-            List<String> ingredients = parseJsonArray(sandwich.getJSONArray("ingredients"));
+            if (jsonObject.has(JSON_KEY_SANDWICH_INGREDIENTS)) {
+                List<String> ingredients = parseJsonArray(jsonObject.getJSONArray("ingredients"));
+                sandwich.setIngredients(ingredients);
+            }
 
-            return new Sandwich(
-                    mainName,
-                    alsoKnownAs,
-                    placeOfOrigin,
-                    description,
-                    image,
-                    ingredients
-            );
-
+            return sandwich;
         } catch (JSONException e) {
             e.printStackTrace();
 
@@ -58,12 +71,8 @@ public class JsonUtils {
     private static List<String> parseJsonArray(JSONArray array) {
         List<String> items = new ArrayList<>();
 
-        try {
-            for (int i = 0; i < array.length(); i++) {
-                items.add(array.getString(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (int i = 0; i < array.length(); i++) {
+            items.add(array.optString(i));
         }
 
         return items;

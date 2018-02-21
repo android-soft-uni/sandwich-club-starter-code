@@ -83,6 +83,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private static String listToString(List<String> items) {
+        if (items == null || items.size() == 0) {
+            return null;
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         String SEPARATOR = ", ";
 
@@ -93,7 +97,14 @@ public class DetailActivity extends AppCompatActivity {
 
         // Remove last comma
         String output = stringBuilder.toString();
-        output = output.substring(0, output.length() - SEPARATOR.length());
+
+        if (output.length() > SEPARATOR.length()) {
+            try {
+                output = output.substring(0, output.length() - SEPARATOR.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return output;
     }
